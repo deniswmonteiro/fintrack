@@ -25,6 +25,16 @@ export default defineConfig([
     rules: {
       "simple-import-sort/imports": "error",
       "simple-import-sort/exports": "error",
+      "react-prop-types": "off",
+    },
+  },
+  {
+    files: [
+      "src/components/ui/**/*.{js,jsx}",
+      "src/components/ui/**/*.{ts,tsx}",
+    ],
+    rules: {
+      "react-refresh/only-export-components": "off",
     },
   },
   eslintConfigPrettier,
