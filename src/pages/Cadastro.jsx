@@ -67,12 +67,14 @@ const Cadastro = () => {
 
   return (
     <section className="flex h-screen w-screen flex-col items-center justify-center gap-6">
-      <Card className="w-125">
-        <CardHeader>
-          <CardTitle>Crie a sua conta</CardTitle>
-          <CardDescription>Insira os seus dados abaixo.</CardDescription>
+      <Card className="w-125 p-0">
+        <CardHeader className="gap-2 p-6 pb-2 text-center">
+          <CardTitle className="text-3xl font-bold">Crie a sua conta</CardTitle>
+          <CardDescription className="text-muted-foreground">
+            Insira os seus dados abaixo.
+          </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-6 pt-0">
           <form id="form-signup" onSubmit={methods.handleSubmit(handleSubmit)}>
             <FieldGroup>
               {/* Nome */}
@@ -87,7 +89,10 @@ const Cadastro = () => {
                       {...field}
                     />
                     {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
+                      <FieldError
+                        errors={[fieldState.error]}
+                        className="text-xs"
+                      />
                     )}
                   </Field>
                 )}
@@ -105,7 +110,10 @@ const Cadastro = () => {
                       {...field}
                     />
                     {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
+                      <FieldError
+                        errors={[fieldState.error]}
+                        className="text-xs"
+                      />
                     )}
                   </Field>
                 )}
@@ -123,7 +131,10 @@ const Cadastro = () => {
                       {...field}
                     />
                     {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
+                      <FieldError
+                        errors={[fieldState.error]}
+                        className="text-xs"
+                      />
                     )}
                   </Field>
                 )}
@@ -140,7 +151,10 @@ const Cadastro = () => {
                       {...field}
                     />
                     {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
+                      <FieldError
+                        errors={[fieldState.error]}
+                        className="text-xs"
+                      />
                     )}
                   </Field>
                 )}
@@ -157,7 +171,10 @@ const Cadastro = () => {
                       {...field}
                     />
                     {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
+                      <FieldError
+                        errors={[fieldState.error]}
+                        className="text-xs"
+                      />
                     )}
                   </Field>
                 )}
@@ -180,7 +197,7 @@ const Cadastro = () => {
                         Ao clicar em "Criar Conta", você aceita{" "}
                         <a
                           href="#"
-                          className={`text-white underline underline-offset-4 ${fieldState.invalid && "text-destructive!"}`}
+                          className={`hover:text-primary text-white underline underline-offset-4 transition-all duration-300 hover:duration-300 ${fieldState.invalid && "text-destructive!"}`}
                         >
                           nosso termo de uso e política de privacidade.
                         </a>
@@ -192,18 +209,22 @@ const Cadastro = () => {
             </FieldGroup>
           </form>
         </CardContent>
-        <CardFooter className="px-0 pt-6 pb-0">
-          <Button type="submit" className="w-full" form="form-signup">
+        <CardFooter className="p-0">
+          <Button
+            type="submit"
+            className="h-15 w-full rounded-tl-none rounded-tr-none text-lg font-semibold"
+            form="form-signup"
+          >
             Criar Conta
           </Button>
         </CardFooter>
       </Card>
       <div className="flex items-center justify-center">
-        <p className="text-center text-sm opacity-70">
+        <p className="text-muted-foreground text-center text-sm opacity-75">
           Já possui uma conta?{" "}
           <Link
             to="/login"
-            className={`pl-0.5 ${buttonVariants({ variant: "link" })}`}
+            className={`hover:text-primary pl-0.5 text-white underline underline-offset-4 ${buttonVariants({ variant: "link" })}`}
           >
             Faça login
           </Link>
