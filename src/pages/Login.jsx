@@ -18,15 +18,20 @@ import { Input } from "@/components/ui/input";
 
 const Login = () => {
   const signInSchema = z.object({
-    email: z.email({
-      error: "O e-mail é inválido",
-    }),
+    email: z
+      .email({
+        error: "O e-mail é inválido",
+      })
+      .trim()
+      .min(1, {
+        error: "O e-mail é obrigatório",
+      }),
     password: z.string().trim().min(6, {
       error: "A senha deve ter no mínimo 6 caracteres.",
     }),
   });
 
-  const methods = useForm({
+  const forms = useForm({
     resolver: zodResolver(signInSchema),
     defaultValues: {
       email: "",
@@ -53,12 +58,12 @@ const Login = () => {
           <form
             action="#"
             id="form-signin"
-            onSubmit={methods.handleSubmit(handleSubmit)}
+            onSubmit={forms.handleSubmit(handleSubmit)}
           >
             <FieldGroup>
               <Controller
                 name="email"
-                control={methods.control}
+                control={forms.control}
                 render={({ field, fieldState }) => (
                   <Field>
                     <Input
@@ -78,7 +83,7 @@ const Login = () => {
 
               <Controller
                 name="password"
-                control={methods.control}
+                control={forms.control}
                 render={({ field, fieldState }) => (
                   <Field>
                     <InputPassword

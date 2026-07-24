@@ -31,9 +31,14 @@ const Cadastro = () => {
       lastName: z.string().trim().min(1, {
         error: "O sobrenome é obrigatório.",
       }),
-      email: z.email({
-        error: "O email é inválido.",
-      }),
+      email: z
+        .email({
+          error: "O e-mail é inválido",
+        })
+        .trim()
+        .min(1, {
+          error: "O e-mail é obrigatório",
+        }),
       password: z.string().trim().min(6, {
         error: "A senha deve ter no mínimo 6 caracteres.",
       }),
@@ -49,7 +54,7 @@ const Cadastro = () => {
       error: "As senhas não conferem.",
     });
 
-  const methods = useForm({
+  const forms = useForm({
     resolver: zodResolver(signupSchema),
     defaultValues: {
       firstName: "",
@@ -78,13 +83,13 @@ const Cadastro = () => {
           <form
             action="#"
             id="form-signup"
-            onSubmit={methods.handleSubmit(handleSubmit)}
+            onSubmit={forms.handleSubmit(handleSubmit)}
           >
             <FieldGroup>
               {/* Nome */}
               <Controller
                 name="firstName"
-                control={methods.control}
+                control={forms.control}
                 render={({ field, fieldState }) => (
                   <Field>
                     <Input
@@ -105,7 +110,7 @@ const Cadastro = () => {
               {/* Last Name */}
               <Controller
                 name="lastName"
-                control={methods.control}
+                control={forms.control}
                 render={({ field, fieldState }) => (
                   <Field>
                     <Input
@@ -126,7 +131,7 @@ const Cadastro = () => {
               {/* E-mail */}
               <Controller
                 name="email"
-                control={methods.control}
+                control={forms.control}
                 render={({ field, fieldState }) => (
                   <Field>
                     <Input
@@ -147,7 +152,7 @@ const Cadastro = () => {
               {/* Password */}
               <Controller
                 name="password"
-                control={methods.control}
+                control={forms.control}
                 render={({ field, fieldState }) => (
                   <Field>
                     <InputPassword
@@ -167,7 +172,7 @@ const Cadastro = () => {
               {/* Password confirmation */}
               <Controller
                 name="passwordConfirmation"
-                control={methods.control}
+                control={forms.control}
                 render={({ field, fieldState }) => (
                   <Field>
                     <InputPassword
@@ -185,7 +190,7 @@ const Cadastro = () => {
               ></Controller>
               <Controller
                 name="terms"
-                control={methods.control}
+                control={forms.control}
                 render={({ field, fieldState }) => (
                   <Field>
                     <div className="items-top flex space-x-2">
