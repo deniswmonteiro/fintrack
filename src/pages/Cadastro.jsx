@@ -75,7 +75,11 @@ const Cadastro = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="p-6 pt-0">
-          <form id="form-signup" onSubmit={methods.handleSubmit(handleSubmit)}>
+          <form
+            action="#"
+            id="form-signup"
+            onSubmit={methods.handleSubmit(handleSubmit)}
+          >
             <FieldGroup>
               {/* Nome */}
               <Controller
@@ -219,6 +223,7 @@ const Cadastro = () => {
           </Button>
         </CardFooter>
       </Card>
+
       <div className="flex items-center justify-center">
         <p className="text-muted-foreground text-center text-sm opacity-75">
           Já possui uma conta?{" "}
