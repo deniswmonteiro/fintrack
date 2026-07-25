@@ -1,6 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Link } from "react-router";
+import { toast } from "sonner";
 import z from "zod";
 
 import InputPassword from "@/components/InputPassword";
@@ -21,40 +24,57 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { api } from "@/lib/axios";
+
+const signupSchema = z
+  .object({
+    firstName: z.string().trim().min(1, {
+      error: "O nome é obrigatório.",
+    }),
+    lastName: z.string().trim().min(1, {
+      error: "O sobrenome é obrigatório.",
+    }),
+    email: z
+      .email({
+        error: "O e-mail é inválido",
+      })
+      .trim()
+      .min(1, {
+        error: "O e-mail é obrigatório",
+      }),
+    password: z.string().trim().min(6, {
+      error: "A senha deve ter no mínimo 6 caracteres.",
+    }),
+    passwordConfirmation: z.string().trim().min(6, {
+      error: "A confirmação de senha deve ter no mínimo 6 caracteres.",
+    }),
+    terms: z.boolean().refine((value) => value === true, {
+      error: "Você precisa aceitar os termos.",
+    }),
+  })
+  .refine((data) => data.password === data.passwordConfirmation, {
+    path: ["passwordConfirmation"],
+    error: "As senhas não conferem.",
+  });
 
 const Cadastro = () => {
-  const signupSchema = z
-    .object({
-      firstName: z.string().trim().min(1, {
-        error: "O nome é obrigatório.",
-      }),
-      lastName: z.string().trim().min(1, {
-        error: "O sobrenome é obrigatório.",
-      }),
-      email: z
-        .email({
-          error: "O e-mail é inválido",
-        })
-        .trim()
-        .min(1, {
-          error: "O e-mail é obrigatório",
-        }),
-      password: z.string().trim().min(6, {
-        error: "A senha deve ter no mínimo 6 caracteres.",
-      }),
-      passwordConfirmation: z.string().trim().min(6, {
-        error: "A confirmação de senha deve ter no mínimo 6 caracteres.",
-      }),
-      terms: z.boolean().refine((value) => value === true, {
-        error: "Você precisa aceitar os termos.",
-      }),
-    })
-    .refine((data) => data.password === data.passwordConfirmation, {
-      path: ["passwordConfirmation"],
-      error: "As senhas não conferem.",
-    });
+  const [user, setUser] = React.useState(null);
 
-  const forms = useForm({
+  const signupMutation = useMutation({
+    mutationKey: ["signup"],
+    mutationFn: async (data) => {
+      const response = await api.post("/users", {
+        first_name: data.firstName,
+        last_name: data.lastName,
+        email: data.email,
+        password: data.password,
+      });
+
+      return response.data;
+    },
+  });
+
+  const form = useForm({
     resolver: zodResolver(signupSchema),
     defaultValues: {
       firstName: "",
@@ -67,8 +87,32 @@ const Cadastro = () => {
   });
 
   const handleSubmit = (data) => {
-    console.log(data);
+    signupMutation.mutate(data, {
+      onSuccess: (user) => {
+        const accessToken = user.tokens.accessToken;
+        const refreshToken = user.tokens.refreshToken;
+
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+
+        setUser(user);
+
+        toast.success("Conta criada com sucesso.");
+      },
+      onError: () => {
+        toast.error(
+          "Erro ao criar conta. Por favor, tente novamente mais tarde."
+        );
+      },
+    });
   };
+
+  if (user)
+    return (
+      <h1>
+        Olá, {user.first_name} {user.last_name}
+      </h1>
+    );
 
   return (
     <section className="flex h-screen w-screen flex-col items-center justify-center gap-6">
@@ -83,13 +127,13 @@ const Cadastro = () => {
           <form
             action="#"
             id="form-signup"
-            onSubmit={forms.handleSubmit(handleSubmit)}
+            onSubmit={form.handleSubmit(handleSubmit)}
           >
             <FieldGroup>
               {/* Nome */}
               <Controller
                 name="firstName"
-                control={forms.control}
+                control={form.control}
                 render={({ field, fieldState }) => (
                   <Field>
                     <Input
@@ -110,7 +154,7 @@ const Cadastro = () => {
               {/* Last Name */}
               <Controller
                 name="lastName"
-                control={forms.control}
+                control={form.control}
                 render={({ field, fieldState }) => (
                   <Field>
                     <Input
@@ -131,7 +175,7 @@ const Cadastro = () => {
               {/* E-mail */}
               <Controller
                 name="email"
-                control={forms.control}
+                control={form.control}
                 render={({ field, fieldState }) => (
                   <Field>
                     <Input
@@ -152,7 +196,7 @@ const Cadastro = () => {
               {/* Password */}
               <Controller
                 name="password"
-                control={forms.control}
+                control={form.control}
                 render={({ field, fieldState }) => (
                   <Field>
                     <InputPassword
@@ -172,7 +216,7 @@ const Cadastro = () => {
               {/* Password confirmation */}
               <Controller
                 name="passwordConfirmation"
-                control={forms.control}
+                control={form.control}
                 render={({ field, fieldState }) => (
                   <Field>
                     <InputPassword
@@ -190,7 +234,7 @@ const Cadastro = () => {
               ></Controller>
               <Controller
                 name="terms"
-                control={forms.control}
+                control={form.control}
                 render={({ field, fieldState }) => (
                   <Field>
                     <div className="items-top flex space-x-2">

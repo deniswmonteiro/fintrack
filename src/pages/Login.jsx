@@ -16,22 +16,22 @@ import {
 import { Field, FieldError, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
-const Login = () => {
-  const signInSchema = z.object({
-    email: z
-      .email({
-        error: "O e-mail é inválido",
-      })
-      .trim()
-      .min(1, {
-        error: "O e-mail é obrigatório",
-      }),
-    password: z.string().trim().min(6, {
-      error: "A senha deve ter no mínimo 6 caracteres.",
+const signInSchema = z.object({
+  email: z
+    .email({
+      error: "O e-mail é inválido",
+    })
+    .trim()
+    .min(1, {
+      error: "O e-mail é obrigatório",
     }),
-  });
+  password: z.string().trim().min(6, {
+    error: "A senha deve ter no mínimo 6 caracteres.",
+  }),
+});
 
-  const forms = useForm({
+const Login = () => {
+  const form = useForm({
     resolver: zodResolver(signInSchema),
     defaultValues: {
       email: "",
@@ -58,12 +58,12 @@ const Login = () => {
           <form
             action="#"
             id="form-signin"
-            onSubmit={forms.handleSubmit(handleSubmit)}
+            onSubmit={form.handleSubmit(handleSubmit)}
           >
             <FieldGroup>
               <Controller
                 name="email"
-                control={forms.control}
+                control={form.control}
                 render={({ field, fieldState }) => (
                   <Field>
                     <Input
@@ -83,7 +83,7 @@ const Login = () => {
 
               <Controller
                 name="password"
-                control={forms.control}
+                control={form.control}
                 render={({ field, fieldState }) => (
                   <Field>
                     <InputPassword
