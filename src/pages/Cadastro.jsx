@@ -60,6 +60,31 @@ const signupSchema = z
 const Cadastro = () => {
   const [user, setUser] = React.useState(null);
 
+  React.useEffect(() => {
+    const init = async () => {
+      try {
+        const accessToken = localStorage.getItem("accessToken");
+        const refreshToken = localStorage.getItem("refreshToken");
+
+        if (!accessToken && !refreshToken) return;
+
+        const response = await api.get("/users/me", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        setUser(response.data);
+      } catch (error) {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        console.log(error);
+      }
+    };
+
+    init();
+  }, []);
+
   const signupMutation = useMutation({
     mutationKey: ["signup"],
     mutationFn: async (data) => {
