@@ -121,7 +121,6 @@ const Cadastro = () => {
         localStorage.setItem("refreshToken", refreshToken);
 
         setUser(user);
-
         toast.success("Conta criada com sucesso.");
       },
       onError: () => {
