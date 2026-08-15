@@ -52,7 +52,7 @@ const Login = () => {
   }
 
   return (
-    <section className="flex h-screen w-screen flex-col items-center justify-center gap-6">
+    <section className="flex h-full w-full flex-col items-center justify-center gap-6 py-15">
       <Card className="w-125 p-0">
         <CardHeader className="gap-2 p-6 pb-2 text-center">
           <CardTitle className="text-3xl font-bold">
