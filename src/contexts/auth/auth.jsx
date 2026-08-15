@@ -4,14 +4,27 @@ import { toast } from "sonner";
 
 import { api } from "@/lib/axios";
 
+const LOCAL_STORAGE_ACCESS_TOKEN = "accessToken";
+const LOCAL_STORAGE_REFRESH_TOKEN = "refreshToken";
+
+const setTokens = (tokens) => {
+  localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN, tokens.accessToken);
+  localStorage.setItem(LOCAL_STORAGE_REFRESH_TOKEN, tokens.refreshToken);
+};
+
+const removeTokens = () => {
+  localStorage.removeItem(LOCAL_STORAGE_ACCESS_TOKEN);
+  localStorage.removeItem(LOCAL_STORAGE_REFRESH_TOKEN);
+};
+
 const AuthContextProvider = ({ children }) => {
   const [user, setUser] = React.useState(null);
 
   React.useEffect(() => {
     const init = async () => {
       try {
-        const accessToken = localStorage.getItem("accessToken");
-        const refreshToken = localStorage.getItem("refreshToken");
+        const accessToken = localStorage.getItem(LOCAL_STORAGE_ACCESS_TOKEN);
+        const refreshToken = localStorage.getItem(LOCAL_STORAGE_REFRESH_TOKEN);
 
         if (!accessToken && !refreshToken) return;
 
@@ -23,8 +36,7 @@ const AuthContextProvider = ({ children }) => {
 
         setUser(response.data);
       } catch (error) {
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
+        removeTokens();
         console.log(error);
       }
     };
@@ -49,12 +61,7 @@ const AuthContextProvider = ({ children }) => {
   const signup = (data) => {
     signupMutation.mutate(data, {
       onSuccess: (user) => {
-        const accessToken = user.tokens.accessToken;
-        const refreshToken = user.tokens.refreshToken;
-
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("refreshToken", refreshToken);
-
+        setTokens(user.tokens);
         setUser(user);
         toast.success("Conta criada com sucesso.");
       },
@@ -81,12 +88,7 @@ const AuthContextProvider = ({ children }) => {
   const login = (data) => {
     loginMutation.mutate(data, {
       onSuccess: (user) => {
-        const accessToken = user.tokens.accessToken;
-        const refreshToken = user.tokens.refreshToken;
-
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("refreshToken", refreshToken);
-
+        setTokens(user.tokens);
         setUser(user);
         toast.success("Login realizado com sucesso.");
       },
