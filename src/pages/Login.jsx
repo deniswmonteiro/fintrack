@@ -20,7 +20,7 @@ import { Field, FieldError, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { api } from "@/lib/axios";
 
-const signInSchema = z.object({
+const loginSchema = z.object({
   email: z
     .email({
       error: "O e-mail é inválido",
@@ -64,14 +64,14 @@ const Login = () => {
   }, []);
 
   const form = useForm({
-    resolver: zodResolver(signInSchema),
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  const signinMutation = useMutation({
+  const loginMutation = useMutation({
     mutationKey: ["login"],
     mutationFn: async (data) => {
       const response = await api.post("/users/login", {
@@ -84,7 +84,7 @@ const Login = () => {
   });
 
   const handleSubmit = (data) => {
-    signinMutation.mutate(data, {
+    loginMutation.mutate(data, {
       onSuccess: (user) => {
         const accessToken = user.tokens.accessToken;
         const refreshToken = user.tokens.refreshToken;
@@ -125,7 +125,7 @@ const Login = () => {
         <CardContent className="p-6 pt-0">
           <form
             action="#"
-            id="form-signin"
+            id="form-login"
             onSubmit={form.handleSubmit(handleSubmit)}
           >
             <FieldGroup>
@@ -174,7 +174,7 @@ const Login = () => {
           <Button
             type="submit"
             className="h-15 w-full rounded-tl-none rounded-tr-none text-lg font-semibold"
-            form="form-signin"
+            form="form-login"
           >
             Fazer login
           </Button>

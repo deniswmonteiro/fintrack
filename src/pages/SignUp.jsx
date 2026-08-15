@@ -1,9 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Link } from "react-router";
-import { toast } from "sonner";
 import z from "zod";
 
 import InputPassword from "@/components/InputPassword";
@@ -24,7 +22,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { api } from "@/lib/axios";
+import { AuthContext } from "@/contexts/auth/auth-context";
 
 const signupSchema = z
   .object({
@@ -57,47 +55,8 @@ const signupSchema = z
     error: "As senhas não conferem.",
   });
 
-const Cadastro = () => {
-  const [user, setUser] = React.useState(null);
-
-  React.useEffect(() => {
-    const init = async () => {
-      try {
-        const accessToken = localStorage.getItem("accessToken");
-        const refreshToken = localStorage.getItem("refreshToken");
-
-        if (!accessToken && !refreshToken) return;
-
-        const response = await api.get("/users/me", {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-
-        setUser(response.data);
-      } catch (error) {
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        console.log(error);
-      }
-    };
-
-    init();
-  }, []);
-
-  const signupMutation = useMutation({
-    mutationKey: ["signup"],
-    mutationFn: async (data) => {
-      const response = await api.post("/users", {
-        first_name: data.firstName,
-        last_name: data.lastName,
-        email: data.email,
-        password: data.password,
-      });
-
-      return response.data;
-    },
-  });
+const SignUp = () => {
+  const { user, signup } = React.useContext(AuthContext);
 
   const form = useForm({
     resolver: zodResolver(signupSchema),
@@ -111,25 +70,7 @@ const Cadastro = () => {
     },
   });
 
-  const handleSubmit = (data) => {
-    signupMutation.mutate(data, {
-      onSuccess: (user) => {
-        const accessToken = user.tokens.accessToken;
-        const refreshToken = user.tokens.refreshToken;
-
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("refreshToken", refreshToken);
-
-        setUser(user);
-        toast.success("Conta criada com sucesso.");
-      },
-      onError: () => {
-        toast.error(
-          "Erro ao criar conta. Por favor, tente novamente mais tarde."
-        );
-      },
-    });
-  };
+  const handleSubmit = (data) => signup(data);
 
   if (user)
     return (
@@ -312,4 +253,4 @@ const Cadastro = () => {
   );
 };
 
-export default Cadastro;
+export default SignUp;
