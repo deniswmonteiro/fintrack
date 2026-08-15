@@ -2,10 +2,11 @@ import { useMutation } from "@tanstack/react-query";
 import React from "react";
 import { toast } from "sonner";
 
+import {
+  LOCAL_STORAGE_ACCESS_TOKEN,
+  LOCAL_STORAGE_REFRESH_TOKEN,
+} from "@/constants/localstorage";
 import { api } from "@/lib/axios";
-
-const LOCAL_STORAGE_ACCESS_TOKEN = "accessToken";
-const LOCAL_STORAGE_REFRESH_TOKEN = "refreshToken";
 
 const setTokens = (tokens) => {
   localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN, tokens.accessToken);
@@ -39,11 +40,7 @@ const AuthContextProvider = ({ children }) => {
 
         if (!accessToken && !refreshToken) return;
 
-        const response = await api.get("/users/me", {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
+        const response = await api.get("/users/me");
 
         setUser(response.data);
       } catch (error) {
