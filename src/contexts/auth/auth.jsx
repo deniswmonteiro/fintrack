@@ -17,12 +17,22 @@ const removeTokens = () => {
   localStorage.removeItem(LOCAL_STORAGE_REFRESH_TOKEN);
 };
 
+const AuthContext = React.createContext({
+  isInitializing: true,
+  user: null,
+  login: () => {},
+  signup: () => {},
+});
+
 const AuthContextProvider = ({ children }) => {
   const [user, setUser] = React.useState(null);
+  const [isInitializing, setIsInitializing] = React.useState(true);
 
   React.useEffect(() => {
     const init = async () => {
       try {
+        setIsInitializing(true);
+
         const accessToken = localStorage.getItem(LOCAL_STORAGE_ACCESS_TOKEN);
         const refreshToken = localStorage.getItem(LOCAL_STORAGE_REFRESH_TOKEN);
 
@@ -36,8 +46,11 @@ const AuthContextProvider = ({ children }) => {
 
         setUser(response.data);
       } catch (error) {
+        setUser(null);
         removeTokens();
         console.log(error);
+      } finally {
+        setIsInitializing(false);
       }
     };
 
@@ -103,6 +116,7 @@ const AuthContextProvider = ({ children }) => {
   return (
     <AuthContext.Provider
       value={{
+        isInitializing,
         user,
         login,
         signup,
@@ -112,11 +126,5 @@ const AuthContextProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
-const AuthContext = React.createContext({
-  user: null,
-  login: () => {},
-  signup: () => {},
-});
 
 export { AuthContext, AuthContextProvider };
