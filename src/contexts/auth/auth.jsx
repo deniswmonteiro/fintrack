@@ -22,6 +22,7 @@ const AuthContext = React.createContext({
   user: null,
   login: () => {},
   signup: () => {},
+  signout: () => {},
 });
 
 const AuthContextProvider = ({ children }) => {
@@ -113,6 +114,11 @@ const AuthContextProvider = ({ children }) => {
     });
   };
 
+  const signout = () => {
+    removeTokens();
+    setUser(null);
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -120,6 +126,7 @@ const AuthContextProvider = ({ children }) => {
         user,
         login,
         signup,
+        signout,
       }}
     >
       {children}
