@@ -22,7 +22,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { AuthContext } from "@/contexts/auth/auth-context";
+import { AuthContext } from "@/contexts/auth/auth";
 
 const signupSchema = z
   .object({

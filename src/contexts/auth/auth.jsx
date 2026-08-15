@@ -4,9 +4,7 @@ import { toast } from "sonner";
 
 import { api } from "@/lib/axios";
 
-import { AuthContext } from "./auth-context";
-
-export const AuthContextProvider = ({ children }) => {
+const AuthContextProvider = ({ children }) => {
   const [user, setUser] = React.useState(null);
 
   React.useEffect(() => {
@@ -112,3 +110,11 @@ export const AuthContextProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+const AuthContext = React.createContext({
+  user: null,
+  login: () => {},
+  signup: () => {},
+});
+
+export { AuthContext, AuthContextProvider };
