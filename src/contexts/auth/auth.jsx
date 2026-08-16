@@ -85,12 +85,8 @@ const AuthContextProvider = ({ children }) => {
   const loginMutation = useMutation({
     mutationKey: ["login"],
     mutationFn: async (data) => {
-      const response = await api.post("/users/login", {
-        email: data.email,
-        password: data.password,
-      });
-
-      return response.data;
+      const response = await UserService.login(data);
+      return response;
     },
   });
 
