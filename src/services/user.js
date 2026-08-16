@@ -20,4 +20,9 @@ export const UserService = {
 
     return response.data;
   },
+
+  me: async () => {
+    const response = await api.get("/users/me");
+    return response.data;
+  },
 };
