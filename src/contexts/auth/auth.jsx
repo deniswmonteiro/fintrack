@@ -7,6 +7,7 @@ import {
   LOCAL_STORAGE_REFRESH_TOKEN_KEY,
 } from "@/constants/localstorage";
 import { api } from "@/lib/axios";
+import { UserService } from "@/services/user";
 
 const setTokens = (tokens) => {
   localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY, tokens.accessToken);
@@ -61,14 +62,8 @@ const AuthContextProvider = ({ children }) => {
   const signupMutation = useMutation({
     mutationKey: ["signup"],
     mutationFn: async (data) => {
-      const response = await api.post("/users", {
-        first_name: data.firstName,
-        last_name: data.lastName,
-        email: data.email,
-        password: data.password,
-      });
-
-      return response.data;
+      const response = await UserService.signup(data);
+      return response;
     },
   });
 
