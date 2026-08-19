@@ -1,6 +1,7 @@
 "use client";
 
 import { format } from "date-fns";
+import { ptBR } from "date-fns/locale/pt-BR";
 import { CalendarIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -13,13 +14,14 @@ import {
 } from "@/components/ui/popover";
 
 export const DatePickerWithRange = ({
+  label = null,
   value,
   onChange,
   placeholder = "Selecione uma data",
 }) => {
   return (
-    <Field className="mx-auto w-60">
-      <FieldLabel htmlFor="date-picker-range">Date Picker Range</FieldLabel>
+    <Field className="mx-auto w-full">
+      {label && <FieldLabel htmlFor="date-picker-range">{label}</FieldLabel>}
       <Popover>
         <PopoverTrigger
           render={
@@ -32,11 +34,11 @@ export const DatePickerWithRange = ({
               {value?.from ? (
                 value.to ? (
                   <>
-                    {format(value.from, "LLL dd, y")} -{" "}
-                    {format(value.to, "LLL dd, y")}
+                    {format(value.from, "dd MMM y", { locale: ptBR })} -{" "}
+                    {format(value.to, "dd MMM y", { locale: ptBR })}
                   </>
                 ) : (
-                  format(value.from, "LLL dd, y")
+                  format(value.from, "dd MMM y", { locale: ptBR })
                 )
               ) : (
                 <span>{placeholder}</span>
