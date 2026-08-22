@@ -43,4 +43,18 @@ export const UserService = {
       lastName: response.data.last_name,
     };
   },
+
+  getBalance: async (input) => {
+    const queryParams = new URLSearchParams();
+
+    queryParams.set("from", input.from);
+    queryParams.set("to", input.to);
+
+    const response = await api.get(
+      `/users/me/balance?${queryParams.toString()}`,
+      {}
+    );
+
+    return response.data;
+  },
 };
