@@ -92,7 +92,7 @@ const SignUp = () => {
             onSubmit={form.handleSubmit(handleSubmit)}
           >
             <FieldGroup>
-              {/* Nome */}
+              {/* Name */}
               <Controller
                 name="firstName"
                 control={form.control}
