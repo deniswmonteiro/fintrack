@@ -1,12 +1,16 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
+  Loader2Icon,
   PiggyBankIcon,
   PlusIcon,
   TrendingDownIcon,
   TrendingUpIcon,
 } from "lucide-react";
+import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
+import { toast } from "sonner";
 import z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -27,6 +31,8 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { AuthContext } from "@/contexts/auth/auth";
+import { TransactionService } from "@/services/transaction";
 
 import { DatePicker } from "./ui/date-picker";
 
@@ -49,6 +55,22 @@ const addTransactionSchema = z.object({
 });
 
 const AddTransactionButton = () => {
+  const queryClient = useQueryClient();
+  const { user } = React.useContext(AuthContext);
+  const { mutateAsync: createTransaction, isPending } = useMutation({
+    mutationKey: ["createTransaction"],
+    mutationFn: (input) => TransactionService.create(input),
+
+    // Re-runs a query made by another component
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["balance", user.id],
+      });
+    },
+  });
+
+  const [dialogIsOpen, setDialogIsOpen] = React.useState(false);
+
   const form = useForm({
     resolver: zodResolver(addTransactionSchema),
     defaultValues: {
@@ -60,13 +82,19 @@ const AddTransactionButton = () => {
     shouldUnregister: true,
   });
 
-  const handleSubmit = (data) => {
-    console.log(data);
+  const handleSubmit = async (data) => {
+    try {
+      await createTransaction(data);
+      setDialogIsOpen(false);
+      toast.success("Transação adicionada com sucesso.");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
     <>
-      <Dialog>
+      <Dialog open={dialogIsOpen} onOpenChange={setDialogIsOpen}>
         <DialogTrigger
           render={
             <Button>
@@ -136,7 +164,6 @@ const AddTransactionButton = () => {
                         field.onChange(values.floatValue)
                       }
                       onChange={() => {}}
-                      {...field}
                     />
                     {fieldState.invalid && (
                       <FieldError
@@ -223,9 +250,22 @@ const AddTransactionButton = () => {
 
             <DialogFooter className="grid grid-cols-2 gap-4">
               <DialogClose
-                render={<Button variant="secondary">Cancelar</Button>}
+                render={
+                  <Button variant="secondary" disabled={isPending}>
+                    Cancelar
+                  </Button>
+                }
               />
-              <Button type="submit">Adicionar</Button>
+              <Button type="submit" disabled={isPending}>
+                {isPending ? (
+                  <>
+                    Adicionando
+                    <Loader2Icon className="mr-1 animate-spin" />
+                  </>
+                ) : (
+                  "Adicionar"
+                )}
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>
