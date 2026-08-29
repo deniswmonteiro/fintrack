@@ -1,32 +1,21 @@
-import { useQuery } from "@tanstack/react-query";
 import {
   PiggyBankIcon,
   TrendingDownIcon,
   TrendingUpIcon,
   WalletIcon,
 } from "lucide-react";
-import React from "react";
 import { useSearchParams } from "react-router";
 
-import { AuthContext } from "@/contexts/auth/auth";
-import { UserService } from "@/services/user";
+import { useGetUserBalance } from "@/api/hooks/user";
 
 import BalanceItem from "./BalanceItem";
 
 const Balance = () => {
-  const { user } = React.useContext(AuthContext);
   const [searchParams] = useSearchParams();
   const from = searchParams.get("from");
   const to = searchParams.get("to");
 
-  const { data } = useQuery({
-    queryKey: ["balance", user.id, from, to],
-    queryFn: async () => {
-      return UserService.getBalance({ from, to });
-    },
-    staleTime: 1000 * 60 * 5, // 5 minutes to re-run the query
-    enabled: Boolean(from) && Boolean(to) && Boolean(user.id),
-  });
+  const { data } = useGetUserBalance({ from, to });
 
   if (!data) return false;
 

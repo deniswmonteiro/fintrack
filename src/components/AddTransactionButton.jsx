@@ -13,6 +13,8 @@ import { NumericFormat } from "react-number-format";
 import { toast } from "sonner";
 import z from "zod";
 
+import { getUserBalanceQueryKey } from "@/api/hooks/user";
+import { TransactionService } from "@/api/services/transaction";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -32,7 +34,6 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { AuthContext } from "@/contexts/auth/auth";
-import { TransactionService } from "@/services/transaction";
 
 import { DatePicker } from "./ui/date-picker";
 
@@ -64,7 +65,7 @@ const AddTransactionButton = () => {
     // Re-runs a query made by another component
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["balance", user.id],
+        queryKey: getUserBalanceQueryKey(user.id),
       });
     },
   });
