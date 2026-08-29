@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Loader2Icon,
   PiggyBankIcon,
@@ -13,8 +12,7 @@ import { NumericFormat } from "react-number-format";
 import { toast } from "sonner";
 import z from "zod";
 
-import { getUserBalanceQueryKey } from "@/api/hooks/user";
-import { TransactionService } from "@/api/services/transaction";
+import { useCreateTransaction } from "@/api/hooks/transaction";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -33,7 +31,6 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { AuthContext } from "@/contexts/auth/auth";
 
 import { DatePicker } from "./ui/date-picker";
 
@@ -56,19 +53,7 @@ const addTransactionSchema = z.object({
 });
 
 const AddTransactionButton = () => {
-  const queryClient = useQueryClient();
-  const { user } = React.useContext(AuthContext);
-  const { mutateAsync: createTransaction, isPending } = useMutation({
-    mutationKey: ["createTransaction"],
-    mutationFn: (input) => TransactionService.create(input),
-
-    // Re-runs a query made by another component
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: getUserBalanceQueryKey(user.id),
-      });
-    },
-  });
+  const { mutateAsync: createTransaction, isPending } = useCreateTransaction();
 
   const [dialogIsOpen, setDialogIsOpen] = React.useState(false);
 
