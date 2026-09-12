@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Loader2Icon,
   PiggyBankIcon,
@@ -7,12 +6,10 @@ import {
   TrendingUpIcon,
 } from "lucide-react";
 import React from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
 import { toast } from "sonner";
-import z from "zod";
 
-import { useCreateTransaction } from "@/api/hooks/transaction";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -31,52 +28,24 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { useCreateTransactionForm } from "@/forms/hooks/transaction";
 
 import { DatePicker } from "./ui/date-picker";
 
-const addTransactionSchema = z.object({
-  name: z.string().trim().min(1, {
-    error: "O nome é obrigatório.",
-  }),
-  amount: z.coerce
-    .number({
-      error: (issue) =>
-        issue.input === undefined || issue.input === ""
-          ? "O valor é obrigatório."
-          : "Insira um valor válido.",
-    })
-    .min(1, {
-      error: "O valor é obrigatório.",
-    }),
-  date: z.date(),
-  type: z.enum(["EARNING", "EXPENSE", "INVESTMENTS"]),
-});
-
 const AddTransactionButton = () => {
-  const { mutateAsync: createTransaction, isPending } = useCreateTransaction();
-
   const [dialogIsOpen, setDialogIsOpen] = React.useState(false);
 
-  const form = useForm({
-    resolver: zodResolver(addTransactionSchema),
-    defaultValues: {
-      name: "",
-      amount: "",
-      date: new Date(),
-      type: "EARNING",
-    },
-    shouldUnregister: true,
-  });
-
-  const handleSubmit = async (data) => {
-    try {
-      await createTransaction(data);
+  const { form, handleSubmit, isPending } = useCreateTransactionForm({
+    onSuccess: () => {
       setDialogIsOpen(false);
       toast.success("Transação adicionada com sucesso.");
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    },
+    onError: () => {
+      toast.error(
+        "Ocorreu um erro ao adicionar transação. Por favor, tente novamente."
+      );
+    },
+  });
 
   return (
     <>
