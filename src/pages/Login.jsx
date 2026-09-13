@@ -1,8 +1,7 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2Icon } from "lucide-react";
 import React from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { Link, Navigate } from "react-router";
-import z from "zod";
 
 import InputPassword from "@/components/InputPassword";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -17,33 +16,12 @@ import {
 import { Field, FieldError, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { AuthContext } from "@/contexts/auth/auth";
-
-const loginSchema = z.object({
-  email: z
-    .email({
-      error: "O e-mail é inválido",
-    })
-    .trim()
-    .min(1, {
-      error: "O e-mail é obrigatório",
-    }),
-  password: z.string().trim().min(6, {
-    error: "A senha deve ter no mínimo 6 caracteres.",
-  }),
-});
+import { useLoginForm } from "@/forms/hooks/user";
 
 const Login = () => {
-  const { user, login, isInitializing } = React.useContext(AuthContext);
+  const { user, isInitializing } = React.useContext(AuthContext);
 
-  const form = useForm({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
-
-  const handleSubmit = (data) => login(data);
+  const { form, handleSubmit } = useLoginForm();
 
   if (isInitializing) return null;
 
@@ -115,8 +93,15 @@ const Login = () => {
             type="submit"
             className="h-15 w-full rounded-tl-none rounded-tr-none text-lg font-semibold"
             form="form-login"
+            disabled={form.formState.isSubmitting}
           >
-            Fazer login
+            {form.formState.isSubmitting ? (
+              <>
+                Fazendo login <Loader2Icon className="mr-1 animate-spin" />
+              </>
+            ) : (
+              "Fazer login"
+            )}
           </Button>
         </CardFooter>
       </Card>

@@ -1,8 +1,7 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2Icon } from "lucide-react";
 import React from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { Link, Navigate } from "react-router";
-import z from "zod";
 
 import InputPassword from "@/components/InputPassword";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -23,54 +22,12 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { AuthContext } from "@/contexts/auth/auth";
-
-const signupSchema = z
-  .object({
-    firstName: z.string().trim().min(1, {
-      error: "O nome é obrigatório.",
-    }),
-    lastName: z.string().trim().min(1, {
-      error: "O sobrenome é obrigatório.",
-    }),
-    email: z
-      .email({
-        error: "O e-mail é inválido",
-      })
-      .trim()
-      .min(1, {
-        error: "O e-mail é obrigatório",
-      }),
-    password: z.string().trim().min(6, {
-      error: "A senha deve ter no mínimo 6 caracteres.",
-    }),
-    passwordConfirmation: z.string().trim().min(6, {
-      error: "A confirmação de senha deve ter no mínimo 6 caracteres.",
-    }),
-    terms: z.boolean().refine((value) => value === true, {
-      error: "Você precisa aceitar os termos.",
-    }),
-  })
-  .refine((data) => data.password === data.passwordConfirmation, {
-    path: ["passwordConfirmation"],
-    error: "As senhas não conferem.",
-  });
+import { useSignupForm } from "@/forms/hooks/user";
 
 const SignUp = () => {
-  const { user, signup, isInitializing } = React.useContext(AuthContext);
+  const { user, isInitializing } = React.useContext(AuthContext);
 
-  const form = useForm({
-    resolver: zodResolver(signupSchema),
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-      passwordConfirmation: "",
-      terms: false,
-    },
-  });
-
-  const handleSubmit = (data) => signup(data);
+  const { form, handleSubmit } = useSignupForm();
 
   if (isInitializing) return null;
 
@@ -229,8 +186,15 @@ const SignUp = () => {
             type="submit"
             className="h-15 w-full rounded-tl-none rounded-tr-none text-lg font-semibold"
             form="form-signup"
+            disabled={form.formState.isSubmitting}
           >
-            Criar Conta
+            {form.formState.isSubmitting ? (
+              <>
+                Criando conta <Loader2Icon className="mr-1 animate-spin" />
+              </>
+            ) : (
+              "Criar Conta"
+            )}
           </Button>
         </CardFooter>
       </Card>
