@@ -15,5 +15,5 @@ export const createTransactionFormSchema = z.object({
       error: "O valor é obrigatório.",
     }),
   date: z.date(),
-  type: z.enum(["EARNING", "EXPENSE", "INVESTMENTS"]),
+  type: z.enum(["EARNING", "EXPENSE", "INVESTMENT"]),
 });

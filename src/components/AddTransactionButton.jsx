@@ -181,12 +181,10 @@ const AddTransactionButton = () => {
                       <Button
                         type="button"
                         variant={
-                          field.value === "INVESTMENTS"
-                            ? "secondary"
-                            : "outline"
+                          field.value === "INVESTMENT" ? "secondary" : "outline"
                         }
                         className="h-10"
-                        onClick={() => field.onChange("INVESTMENTS")}
+                        onClick={() => field.onChange("INVESTMENT")}
                       >
                         <PiggyBankIcon className="text-primary-blue" />
                         Investimento

@@ -23,7 +23,7 @@ const Header = () => {
   return (
     <header>
       <Card>
-        <CardContent className="flex items-center justify-between px-8">
+        <CardContent className="flex items-center justify-between px-6">
           <div>
             <a href="/">
               <img src={LogoFintrack} alt="Logo da Fintrack" />
