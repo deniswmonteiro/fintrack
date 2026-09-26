@@ -171,6 +171,7 @@
   --primary-blue: oklch(0.633 0.192 259.624);
   --primary-green: oklch(0.682 0.188 138.166);
   --primary-red: oklch(0.608 0.22 26.853);
+  --primary-gray: oklch(0.682 0 138.166);
 
   /* Fundo da aplicação (<body>) */
   --background: oklch(0.145 0 0);
