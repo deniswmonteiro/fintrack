@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  .scroll-area {
+    height: 200px;
+    overflow-y: auto;
+    border: 1px solid black;
+  }
+  /* Our overrides */
+  .scroll-area .table-container {
+    overflow: visible; /* overriding overflow-x: auto */
+  }
+  .scroll-area thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: white;
+  }
+  /* Default table styles */
+  .table-container {
+    position: relative;
+    width: 100%;
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th, td {
+    padding: 8px;
+    border: 1px solid #ccc;
+  }
+</style>
+</head>
+<body>
+  <div class="scroll-area">
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr><th>Header 1</th><th>Header 2</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Row 1</td><td>Data</td></tr>
+          <tr><td>Row 2</td><td>Data</td></tr>
+          <tr><td>Row 3</td><td>Data</td></tr>
+          <tr><td>Row 4</td><td>Data</td></tr>
+          <tr><td>Row 5</td><td>Data</td></tr>
+          <tr><td>Row 6</td><td>Data</td></tr>
+          <tr><td>Row 7</td><td>Data</td></tr>
+          <tr><td>Row 8</td><td>Data</td></tr>
+          <tr><td>Row 9</td><td>Data</td></tr>
+          <tr><td>Row 10</td><td>Data</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

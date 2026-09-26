@@ -11,7 +11,7 @@ import TransactionTypeBadge from "./TransactionTypeBadge";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { DataTable } from "./ui/data-table";
-import { ScrollArea } from "./ui/scroll-area";
+import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 
 const columnHelper = createColumnHelper();
 
@@ -65,8 +65,9 @@ const TransactionsTable = () => {
       <h2 className="mb-6 text-xl font-bold">Transações</h2>
       <Card>
         <CardContent>
-          <ScrollArea className="h-50 max-h-50">
+          <ScrollArea className="[&_thead]:bg-card h-50 max-h-50 **:data-[slot=table-container]:overflow-visible [&_thead]:sticky [&_thead]:top-0 [&_thead]:z-10 [&_thead]:shadow-sm">
             <DataTable columns={columns} data={transactions} />
+            <ScrollBar orientation="horizontal" />
           </ScrollArea>
         </CardContent>
       </Card>
