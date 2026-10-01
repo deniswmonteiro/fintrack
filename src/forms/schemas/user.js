@@ -1,6 +1,6 @@
 import z from "zod";
 
-const useLoginFormSchema = z.object({
+export const useLoginFormSchema = z.object({
   email: z
     .email({
       error: "O e-mail é inválido",
@@ -14,7 +14,7 @@ const useLoginFormSchema = z.object({
   }),
 });
 
-const useSignupFormSchema = z
+export const useSignupFormSchema = z
   .object({
     firstName: z.string().trim().min(1, {
       error: "O nome é obrigatório.",
@@ -44,5 +44,3 @@ const useSignupFormSchema = z
     path: ["passwordConfirmation"],
     error: "As senhas não conferem.",
   });
-
-export { useLoginFormSchema, useSignupFormSchema };
