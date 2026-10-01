@@ -6,6 +6,24 @@ import { AuthContext } from "@/contexts/auth/auth";
 import { TransactionService } from "../services/transaction";
 import { getUserBalanceQueryKey } from "./user";
 
+/** Get transactions */
+export const getTransactionsQueryKey = (userId, from, to) => {
+  if (!from || !to) return ["getTransactions", userId];
+
+  return ["getTransactions", userId, from, to];
+};
+
+export const useGetTransactions = ({ from, to }) => {
+  const { user } = React.useContext(AuthContext);
+
+  return useQuery({
+    queryKey: getTransactionsQueryKey(user.id, from, to),
+    queryFn: () => TransactionService.getAll({ from, to }),
+    enabled: Boolean(from) && Boolean(to) && Boolean(user.id),
+  });
+};
+
+/** Create a transaction */
 export const getCreateTransactionMutationKey = ["createTransaction"];
 
 export const useCreateTransaction = () => {
@@ -28,19 +46,25 @@ export const useCreateTransaction = () => {
   });
 };
 
-/** Get Transactions */
-export const getTransactionsQueryKey = (userId, from, to) => {
-  if (!from || !to) return ["getTransactions", userId];
+/** Edit a transaction */
+export const getEditTransactionMutationKey = ["editTransaction"];
 
-  return ["getTransactions", userId, from, to];
-};
-
-export const useGetTransactions = ({ from, to }) => {
+export const useEditTransaction = () => {
+  const queryClient = useQueryClient();
   const { user } = React.useContext(AuthContext);
 
-  return useQuery({
-    queryKey: getTransactionsQueryKey(user.id, from, to),
-    queryFn: () => TransactionService.getAll({ from, to }),
-    enabled: Boolean(from) && Boolean(to) && Boolean(user.id),
+  return useMutation({
+    mutationKey: getEditTransactionMutationKey,
+    mutationFn: (input) => TransactionService.update(input),
+
+    // Re-runs a query made by another component
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: getUserBalanceQueryKey(user.id),
+      });
+      queryClient.invalidateQueries({
+        queryKey: getTransactionsQueryKey(user.id),
+      });
+    },
   });
 };
