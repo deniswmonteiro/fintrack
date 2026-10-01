@@ -17,3 +17,7 @@ export const createTransactionFormSchema = z.object({
   date: z.date(),
   type: z.enum(["EARNING", "EXPENSE", "INVESTMENT"]),
 });
+
+export const editTransactionFormSchema = createTransactionFormSchema.extend({
+  id: z.uuid(),
+});
