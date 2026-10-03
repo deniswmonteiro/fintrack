@@ -115,6 +115,7 @@ const AddTransactionButton = () => {
                       prefix="R$ "
                       allowNegative={false}
                       customInput={Input}
+                      {...field}
                       onValueChange={(values) =>
                         field.onChange(values.floatValue)
                       }
