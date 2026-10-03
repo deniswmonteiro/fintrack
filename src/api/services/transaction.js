@@ -22,7 +22,7 @@ export const TransactionService = {
     return response.data;
   },
   update: async (input) => {
-    const response = await api.patch(`/transactions/me?${input.id}`, {
+    const response = await api.patch(`/transactions/me/${input.id}`, {
       name: input.name,
       amount: input.amount,
       date: input.date,
