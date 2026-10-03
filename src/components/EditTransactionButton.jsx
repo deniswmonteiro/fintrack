@@ -54,7 +54,7 @@ const EditTransactionButton = ({ transaction }) => {
           </Button>
         }
       />
-      <SheetContent className="min-w-112.5">
+      <SheetContent className="min-w-112.5 p-6">
         <form
           action="#"
           id="form-add-transaction"
@@ -63,10 +63,10 @@ const EditTransactionButton = ({ transaction }) => {
         >
           <SheetHeader className="items-center">
             <SheetTitle className="text-xl font-bold">
-              Adicionar Transação
+              Editar Transação
             </SheetTitle>
             <SheetDescription className="text-muted-foreground">
-              Insira as informações abaixo
+              Atualize as informações abaixo
             </SheetDescription>
           </SheetHeader>
           <FieldGroup>
@@ -198,7 +198,7 @@ const EditTransactionButton = ({ transaction }) => {
             ></Controller>
           </FieldGroup>
 
-          <SheetFooter className="grid grid-cols-2 gap-4">
+          <SheetFooter className="mt-4 grid grid-cols-2 gap-4 p-0">
             <SheetClose
               render={
                 <Button variant="secondary" disabled={isPending}>
