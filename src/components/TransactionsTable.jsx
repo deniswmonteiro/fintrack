@@ -1,14 +1,13 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { ExternalLinkIcon } from "lucide-react";
 import { useSearchParams } from "react-router";
 
 import { useGetTransactions } from "@/api/hooks/transaction";
 import { formatCurrency } from "@/helpers/currency";
 
+import EditTransactionButton from "./EditTransactionButton";
 import TransactionTypeBadge from "./TransactionTypeBadge";
-import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { DataTable } from "./ui/data-table";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
@@ -41,12 +40,8 @@ const columns = columnHelper.columns([
   }),
   columnHelper.accessor("actions", {
     header: "Ações",
-    cell: () => {
-      return (
-        <Button variant="ghost" size="icon">
-          <ExternalLinkIcon className="text-muted-foreground" />
-        </Button>
-      );
+    cell: ({ row: { original: transaction } }) => {
+      return <EditTransactionButton transaction={transaction} />;
     },
   }),
 ]);
@@ -65,7 +60,7 @@ const TransactionsTable = () => {
       <h2 className="mb-6 text-xl font-bold">Transações</h2>
       <Card>
         <CardContent>
-          <ScrollArea className="[&_thead]:bg-card h-50 max-h-50 **:data-[slot=table-container]:overflow-visible [&_thead]:sticky [&_thead]:top-0 [&_thead]:z-10 [&_thead]:shadow-sm">
+          <ScrollArea className="[&_thead]:bg-card h-70 max-h-70 **:data-[slot=table-container]:overflow-visible [&_thead]:sticky [&_thead]:top-0 [&_thead]:z-10 [&_thead]:shadow-sm">
             <DataTable columns={columns} data={transactions} />
             <ScrollBar orientation="horizontal" />
           </ScrollArea>
